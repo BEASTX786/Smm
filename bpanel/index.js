@@ -1,95 +1,186 @@
-let coll = document.getElementsByClassName("panel__btn")
-let i
-let slideIndex = 0
-const MAX_SLIDES_COUNT = 2
+document.addEventListener("DOMContentLoaded", function() {
+  // Initialize AOS (Animate On Scroll) library
+  AOS.init({
+    duration: 600,
+    once: true // Ensures animations run only once
+  });
 
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function () {
-    this.classList.toggle("panel__btn_active")
-    let content = this.nextElementSibling
-    if (content.style.maxHeight) {
-      content.style.maxHeight = null
-    } else {
-      content.style.maxHeight = content.scrollHeight + "px"
+  // --- Mobile Menu Functionality ---
+  const mobileMenuButton = document.querySelector('.mobile-menu__toggle');
+  const mobileMenuDropdown = document.querySelector('.mobile-menu__dropdown');
+
+  if (mobileMenuButton && mobileMenuDropdown) { // Ensure elements exist
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenuDropdown.classList.toggle('active'); // Consistent with CSS: .active
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (event) => {
+      const isClickInsideMenu = mobileMenuDropdown.contains(event.target);
+      const isClickOnButton = mobileMenuButton.contains(event.target);
+
+      if (!isClickInsideMenu && !isClickOnButton && mobileMenuDropdown.classList.contains('active')) {
+        mobileMenuDropdown.classList.remove('active');
+      }
+    });
+  }
+
+  // --- FAQ Accordion Functionality ---
+  const faqPanels = document.querySelectorAll('.panel');
+
+  faqPanels.forEach(panel => {
+    const button = panel.querySelector('.panel__btn');
+    const content = panel.querySelector('.panel__content');
+
+    if (button && content) {
+      button.addEventListener('click', () => {
+        // Close all other open panels
+        faqPanels.forEach(otherPanel => {
+          if (otherPanel !== panel && otherPanel.classList.contains('active')) {
+            otherPanel.classList.remove('active');
+            otherPanel.querySelector('.panel__btn').classList.remove('active'); // Remove active from button
+            otherPanel.querySelector('.panel__content').style.maxHeight = '0';
+            otherPanel.querySelector('.panel__content').style.paddingTop = '0';
+            otherPanel.querySelector('.panel__content').style.paddingBottom = '0';
+          }
+        });
+
+        // Toggle the clicked panel
+        panel.classList.toggle('active');
+        button.classList.toggle('active'); // Add/remove 'active' class on the button for styling (e.g., the +/– icon)
+
+        if (panel.classList.contains('active')) {
+          content.style.maxHeight = content.scrollHeight + "px"; // Set max-height to scrollHeight for smooth expansion
+          content.style.paddingTop = '15px'; // Apply padding for transition effect
+          content.style.paddingBottom = '20px'; // Apply padding for transition effect
+        } else {
+          content.style.maxHeight = '0';
+          content.style.paddingTop = '0';
+          content.style.paddingBottom = '0';
+        }
+      });
     }
-  })
-}
+  });
 
-const mobileMenuButton = document.querySelector('.mobile-menu__toggle')
-const mobileMenuList = document.querySelector('.mobile-menu__dropdown')
 
-const paginatonButtons = document.querySelectorAll('.carousel-paginator__item')
-const carousel = document.querySelector('.carousel__slides');
-const slideWidth = document.querySelector('.carousel__slide').offsetWidth;
-
-const nextButton = document.querySelector('.carousel__mobile-paginator-next')
-const prevButton = document.querySelector('.carousel__mobile-paginator-prev')
-
-prevButton.classList.add('btn-disabled')
-
-if (paginatonButtons.length) {
-  paginatonButtons[0].classList.add('carousel-paginator__item_active');
-}
-
-function showGallerySlide(index) {
-  carousel.style.transform = `translateX(-${index * slideWidth}px)`;
-  paginatonButtons.forEach((button) => button.classList.remove('carousel-paginator__item_active'));
-  paginatonButtons[index].classList.add('carousel-paginator__item_active');
-}
-
-const paginatonBenefitsButtons = document.querySelectorAll('.benefit-paginator__item');
-
-if (paginatonBenefitsButtons.length) {
-  paginatonBenefitsButtons[0].classList.add('benefit-paginator__item_active');
-}
-
-function switchSlide(direction) {
-  slideIndex = direction === 'next' ? Math.min(2, slideIndex += 1) : Math.max(0, slideIndex -= 1)
-  carousel.style.transform = `translateX(-${slideIndex * slideWidth}px)`;
-
-  const paginatonButtons = document.querySelectorAll('.mobile-slide-btn');
-  paginatonButtons.forEach((button) => button.classList.remove('btn-disabled'));
-
-  if (slideIndex === 0) {
-    prevButton.classList.add('btn-disabled');
-  } else if (slideIndex === MAX_SLIDES_COUNT) {
-    nextButton.classList.add('btn-disabled');
-  }
-
+  // --- Gallery Carousel Functionality ---
+  const galleryCarousel = document.querySelector('.carousel__slides');
+  const galleryPaginatorButtons = document.querySelectorAll('.carousel-paginator__item');
+  const galleryNextButton = document.querySelector('.carousel__mobile-paginator-next');
+  const galleryPrevButton = document.querySelector('.carousel__mobile-paginator-prev');
   const mobilePageIndicators = document.querySelectorAll('.carousel__page-indicator-item');
+  const gallerySlides = document.querySelectorAll('.carousel__slide');
 
-  if (mobilePageIndicators.length) {
-    mobilePageIndicators.forEach((indicator) => indicator.classList.remove('carousel__page-indicator-item_active'));
-    mobilePageIndicators[slideIndex].classList.add('carousel__page-indicator-item_active');
+  let currentGallerySlideIndex = 0; // Keep track of the current slide
+
+  // Function to update the carousel's position and button/indicator states
+  function updateGalleryCarousel() {
+    if (!galleryCarousel || gallerySlides.length === 0) return;
+
+    // Recalculate slide width on each update to ensure responsiveness
+    const slideWidth = gallerySlides[0].offsetWidth;
+    galleryCarousel.style.transform = `translateX(-${currentGallerySlideIndex * slideWidth}px)`;
+
+    // Update desktop paginator buttons
+    galleryPaginatorButtons.forEach((button, index) => {
+      if (index === currentGallerySlideIndex) {
+        button.classList.add('carousel-paginator__item_active');
+      } else {
+        button.classList.remove('carousel-paginator__item_active');
+      }
+    });
+
+    // Update mobile page indicators
+    mobilePageIndicators.forEach((indicator, index) => {
+      if (index === currentGallerySlideIndex) {
+        indicator.classList.add('carousel__page-indicator-item_active');
+      } else {
+        indicator.classList.remove('carousel__page-indicator-item_active');
+      }
+    });
+
+    // Disable/enable next/prev buttons
+    galleryPrevButton.classList.toggle('btn-disabled', currentGallerySlideIndex === 0);
+    galleryNextButton.classList.toggle('btn-disabled', currentGallerySlideIndex === gallerySlides.length - 1);
   }
-}
 
-function showBenefitSlide(index) {
-  const carousel = document.querySelector('.benefits__info-carousel');
-  const slideWidth = document.querySelector('.benefits__info-slide').offsetWidth;
+  // Event listeners for desktop paginator buttons
+  galleryPaginatorButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      currentGallerySlideIndex = index;
+      updateGalleryCarousel();
+    });
+  });
 
-  carousel.style.transform = `translateX(-${index * slideWidth}px)`;
-  paginatonBenefitsButtons.forEach((button) => button.classList.remove('benefit-paginator__item_active'));
-  paginatonBenefitsButtons[index].classList.add('benefit-paginator__item_active');
-}
-
-function toggleMenu () {
-  const mobileMenu = document.querySelector('.mobile-menu__dropdown')
-  mobileMenu.classList.toggle('mobile-menu__dropdown_visible')
-}
-
-window.addEventListener("load", function() {
-  const bg = document.querySelector('.header');
-  bg.classList.add('header_visible'); // Add the class to trigger opacity change
-});
-
-document.addEventListener('click', (event) => {
-  console.log(event.target)
-  if (!mobileMenuList.contains(event.target) && event.target !== mobileMenuButton) {
-    mobileMenuList.classList.remove('mobile-menu__dropdown_visible')
+  // Event listeners for mobile next/prev buttons
+  if (galleryNextButton) {
+    galleryNextButton.addEventListener('click', () => {
+      if (currentGallerySlideIndex < gallerySlides.length - 1) {
+        currentGallerySlideIndex++;
+        updateGalleryCarousel();
+      }
+    });
   }
-});
+  if (galleryPrevButton) {
+    galleryPrevButton.addEventListener('click', () => {
+      if (currentGallerySlideIndex > 0) {
+        currentGallerySlideIndex--;
+        updateGalleryCarousel();
+      }
+    });
+  }
 
-document.addEventListener("DOMContentLoaded", () => {
-  AOS.init()
+  // Initialize gallery carousel state
+  updateGalleryCarousel(); // Call initially to set correct state
+
+  // --- Benefits Carousel Functionality ---
+  const benefitsCarousel = document.querySelector('.benefits__info-carousel');
+  const benefitsPaginatorButtons = document.querySelectorAll('.benefit-paginator__item');
+  const benefitsSlides = document.querySelectorAll('.benefits__info-slide');
+
+  let currentBenefitSlideIndex = 0;
+
+  function updateBenefitsCarousel() {
+    if (!benefitsCarousel || benefitsSlides.length === 0) return;
+
+    const slideWidth = benefitsSlides[0].offsetWidth;
+    benefitsCarousel.style.transform = `translateX(-${currentBenefitSlideIndex * slideWidth}px)`;
+
+    benefitsPaginatorButtons.forEach((button, index) => {
+      if (index === currentBenefitSlideIndex) {
+        button.classList.add('benefit-paginator__item_active');
+      } else {
+        button.classList.remove('benefit-paginator__item_active');
+      }
+    });
+  }
+
+  // Event listeners for benefits paginator buttons
+  benefitsPaginatorButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      currentBenefitSlideIndex = index;
+      updateBenefitsCarousel();
+    });
+  });
+
+  // Initialize benefits carousel state
+  updateBenefitsCarousel(); // Call initially to set correct state
+
+
+  // --- Header Visibility on Load ---
+  // Using DOMContentLoaded is generally preferred over 'load' for earlier execution
+  // unless external resources (like images) *must* be loaded for the effect.
+  const header = document.querySelector('.header');
+  if (header) {
+    header.classList.add('header_visible');
+  }
+
+  // --- Handle Window Resize for Carousels ---
+  // Recalculate slide positions on window resize to maintain responsiveness
+  window.addEventListener('resize', () => {
+    // A small debounce could be added here for very performance-sensitive sites
+    // to avoid recalculating too rapidly during a resize action.
+    updateGalleryCarousel();
+    updateBenefitsCarousel();
+  });
 });
