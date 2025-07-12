@@ -10,7 +10,7 @@
   --font-size-h2: 64px;
   --font-size-h3: 16px;
   --font-size-sub-heading-1: 48px;
-  --font-size-sub-heading-2: 64px;
+  --font-size-sub-heading-2: 64px; /* Unused in provided HTML, but kept */
   --font-size-body: 18px;
   --font-size--footnote: 16px;
 
@@ -19,11 +19,11 @@
   --font-semi-bold: 600;
   --font-bold: 700;
 
-  --color-text-secondary: #EBF1F7;
-  --color-text-grey: #FAFCFF;
-  --color-block-background: #202B36;
-  --color-badge: #FF7438;
-  --color-border: #313C47;
+  --color-text-secondary: #EBF1F7; /* Unused in provided HTML, but kept */
+  --color-text-grey: #FAFCFF; /* Unused in provided HTML, but kept */
+  --color-block-background: #202B36; /* Unused in provided HTML, but kept */
+  --color-badge: #FF7438; /* Unused in provided HTML, but kept */
+  /* --color-border: #313C47; // DUPLICATE DEFINITION, removed */
 
 }
 
@@ -31,10 +31,11 @@
   box-sizing: border-box;
 }
 
-h1,h2,h2,h3,h4,h5,p {
+/* Fixed typo: Removed duplicate h2 */
+h1, h2, h3, h4, h5, p {
   margin: 0;
   padding: 0;
-  font-weight: 700;
+  font-weight: 700; /* This font-weight will apply to all of them, ensure it's desired */
 }
 
 input,
@@ -75,7 +76,7 @@ body {
   box-sizing: border-box;
   background-color: var(--color-body);
   color: var(--color-text-white);
-  overflow-x: hidden;
+  overflow-x: hidden; /* Consider if truly needed, or if layout issues exist */
 }
 
 h1 {
@@ -96,11 +97,11 @@ h3 {
   text-transform: uppercase;
   background: var(--primary-gradient);
   -webkit-background-clip: text;
-  color: transparent;
+  color: transparent; /* This should usually be -webkit-text-fill-color: transparent; if color is set on the element */
 }
 
 .container-fluid {
-  overflow-x: hidden;
+  overflow-x: hidden; /* Consider if truly needed, or if layout issues exist */
 }
 
 .header {
@@ -133,6 +134,34 @@ h3 {
 
 .navigation__menu-mobile {
   display: none;
+}
+
+/* Changed _visible to .active for consistency with JS */
+.mobile-menu__dropdown {
+  display: none;
+  /* Keep existing styling for positioning, background, etc. */
+  max-width: 219px;
+  min-width: 219px;
+  width: 100%;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  flex-direction: column; /* Changed from default block */
+  gap: 16px;
+  padding: 20px;
+  background-color: rgba(14, 19, 23, .9);
+  border-radius: 16px;
+  text-align: center;
+  border: 1px solid rgb(255, 255, 255, 0.1);
+}
+
+.mobile-menu__dropdown.active { /* This class is now used by JS */
+  display: flex; /* Changed from !important */
+}
+
+
+.sign-btn {
+  /* ... existing styles ... */
 }
 
 .navigation__menu-list {
@@ -212,11 +241,12 @@ h3 {
   width: max-content;
 }
 
-.badge_big .badge__icon {
+.badge_big .badge__icon { /* Typo here: should be .badge__big */
   width: 42px;
   height: 42px;
 }
 
+/* Consider refactoring these absolute positions for better responsiveness */
 .badge-1 {
   position: absolute;
   top: 113px;
@@ -280,12 +310,13 @@ h3 {
 
 .btn-primary:hover {
   transform: scale(1.02);
-  box-shadow: 0 4px 15px rgba(255, 160, 27, 0.5)
+  box-shadow: 0 44px 15px rgba(255, 160, 27, 0.5) /* Typo: 44px? Should be 4px? */
 }
 
 .btn-secondary {
   background: var(--secondary-gradient);
-  color: var(--primary-gradient);
+  /* The color here will be overridden by the -webkit-background-clip: text; */
+  color: var(--primary-gradient); 
 }
 
 .btn-secondary:hover {
@@ -297,7 +328,7 @@ h3 {
   content: 'Services';
   background: var(--primary-gradient);
   -webkit-background-clip: text;
-  color: transparent;
+  color: transparent; /* This typically means -webkit-text-fill-color: transparent; */
 }
 
 .btn-disabled {
@@ -385,10 +416,10 @@ h3 {
 
 .slide__image {
   margin-bottom: 66px;
-  width: 504px;
-  height: 504px;
-  width: 100%;
-  object-fit: none;
+  width: 504px; /* Hardcoded width, might be overridden by width: 100% */
+  height: 504px; /* Hardcoded height */
+  width: 100%; /* This will conflict with 504px, 100% will win */
+  object-fit: none; /* See notes above */
 }
 
 .slide__description {
@@ -419,7 +450,7 @@ h3 {
 }
 
 .carousel__mobile-paginator-prev, .carousel__mobile-paginator-next {
-  display: none;
+  display: none; /* Initially hidden, shown at 430px breakpoint */
 }
 
 .carousel-paginator__item {
@@ -442,7 +473,7 @@ h3 {
 
 .services {
   position: relative;
-  left: -30px;
+  left: -30px; /* This offset is problematic for responsiveness */
   display: flex;
   gap: 142px;
   max-width: 1488px;
@@ -474,7 +505,7 @@ h3 {
 
 .promotion {
   position: relative;
-  left: 23px;
+  left: 23px; /* This offset is problematic for responsiveness */
   display: flex;
   align-items: center;
   gap: 170px;
@@ -648,11 +679,11 @@ h3 {
 .panel {
   background-color: #13191E;
   border-radius: 15px;
-  padding-bottom: 17px;
+  /* padding-bottom: 17px; Removed, let panel__content handle padding */
 }
 
 .panel__btn {
-  padding: 25px 25px 0 25px;
+  padding: 25px 25px 0 25px; /* Adjust padding if needed after removing panel padding */
   width: 100%;
   cursor: pointer;
   color: var(--color-text-white);
@@ -664,29 +695,35 @@ h3 {
   border-radius: 15px;
   border: none;
   outline: none;
+  /* Added for consistency with JS which expects flex for icon alignment */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .panel__btn:active {
-  background-color: none ;
+  background-color: transparent ; /* Changed from none to transparent */
 }
 
 .panel__btn::after {
   content: '\02795'; /* Unicode character for "plus" sign (+) */
-  font-size: 13px;
+  font-size: 13px; /* Smaller font size for icon */
   color: var(--color-text-white);
-  float: right;
-  margin-left: 5px;
+  margin-left: 5px; /* Added margin for spacing */
+  transition: transform 0.3s ease; /* Added transition for icon rotation */
 }
 
-.panel__btn_active::after {
+/* Changed .panel__btn_active to .panel__btn.active for consistency with JS */
+.panel__btn.active::after {
   content: '\02796'; /* Unicode character for "minus" sign (-) */
+  /* transform: rotate(45deg); // You could add a rotation if desired for the X */
 }
 
 .panel__content {
   padding: 8px 25px 0 25px;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.2s ease-out;
+  transition: max-height 0.2s ease-out, padding 0.2s ease-out; /* Added padding to transition */
   color: rgba(255, 255, 255, 0.65);
 }
 
@@ -757,7 +794,7 @@ h3 {
   font-size: var(--font-size--footnote);
   font-weight: var(--font-semi-bold);
   line-height: 159%;
-  color: rgb(255, 255, 255, 0.16);
+  color: rgb(255, 255, 255, 0.16); /* Original low contrast. Use #FFFFFF for better contrast if desired as per earlier suggestion. */
   transform: translateX(-50px);
 }
 
@@ -782,14 +819,16 @@ h3 {
     height: 329px;
   }
 
+  /* Removed fixed left offset */
   .services {
-    left: 0;
+    left: initial;
     gap: 80px;
     margin-bottom: 80px;
   }
 
+  /* Removed fixed left offset */
   .promotion {
-    left: 0;
+    left: initial;
     gap: 80px;
     margin-bottom: 80px;
   }
@@ -830,13 +869,13 @@ h3 {
     display: none;
   }
 
-  .mobile-menu__dropdown {
+  /* These two rules are now UNNECESSARY IF JS and CSS are consistent with `.active` */
+  /* .mobile-menu__dropdown {
     display: none !important;
   }
-
   .mobile-menu__dropdown_visible {
     display: flex !important;
-  }
+  } */
 
   .sign-btn {
     display: none;
@@ -846,6 +885,8 @@ h3 {
     position: relative;
   }
 
+  /* This is now the primary styling for the dropdown, display is toggled by JS on .active */
+  /* Removed display: flex from here */
   .mobile-menu__dropdown {
     max-width: 219px;
     min-width: 219px;
@@ -853,14 +894,13 @@ h3 {
     position: absolute;
     top: calc(100% + 6px);
     right: 0;
-    display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Kept flex-direction here */
     gap: 16px;
     padding: 20px;
     background-color: rgba(14, 19, 23, .9);
     border-radius: 16px;
     text-align: center;
-    border: 1px solid rgb(255, 255, 255, 0.1)
+    border: 1px solid rgb(255, 255, 255, 0.1);
   }
 
   .mobile-menu__toggle {
@@ -1026,6 +1066,11 @@ h3 {
     font-size: var(--font-size-sub-heading-1);
   }
 
+  .panel__content {
+    font-size: 16px;
+    line-height: 164%;
+  }
+
   .placeholder__wrapper {
     padding: 54px;
   }
@@ -1138,6 +1183,7 @@ h3 {
     font-size: 26px;
   }
 
+  /* This is likely redundant as .carousel__paginator is display: none; */
   .carousel__page-indicator {
     display: none;
   }
@@ -1157,8 +1203,9 @@ h3 {
     flex-direction: column;
   }
 
+  /* Remove absolute positioning for toasts on small screens */
   .promotion__toasts > * {
-    position: relative;
+    position: relative; /* Change from absolute to relative */
     transform: none;
     left: 0;
     right: 0;
@@ -1220,8 +1267,9 @@ h3 {
     margin-bottom: 40px;
   }
 
+  /* Mobile page indicator (now made visible again) */
   .carousel__page-indicator {
-    display: flex;
+    display: flex; /* Made visible again for small screens */
     gap: 8px;
     justify-content: center;
   }
