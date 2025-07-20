@@ -4,13 +4,14 @@
   --primary-gradient: linear-gradient(to bottom right, #FF00EE, #FFA01B);
   --secondary-gradient: linear-gradient(to bottom right, #441542, #432a22);
   --primary-gradient-reverse: linear-gradient(to bottom right, #FFA01B, #FF00EE);
+  --logo-gradient: linear-gradient(to right, #F804E8, #A333FF); /* NEW: Specific gradient for the logo */
   --color-border: #1B2125;
 
   --font-size-h1: 96px;
   --font-size-h2: 64px;
   --font-size-h3: 16px;
   --font-size-sub-heading-1: 48px;
-  --font-size-sub-heading-2: 64px; /* Unused in provided HTML, but kept */
+  --font-size-sub-heading-2: 64px;
   --font-size-body: 18px;
   --font-size--footnote: 16px;
 
@@ -19,31 +20,39 @@
   --font-semi-bold: 600;
   --font-bold: 700;
 
-  --color-text-secondary: #EBF1F7; /* Unused in provided HTML, but kept */
-  --color-text-grey: #FAFCFF; /* Unused in provided HTML, but kept */
-  --color-block-background: #202B36; /* Unused in provided HTML, but kept */
-  --color-badge: #FF7438; /* Unused in provided HTML, but kept */
-  /* --color-border: #313C47; // DUPLICATE DEFINITION, removed */
-
+  --color-text-secondary: #EBF1F7;
+  --color-text-grey: #FAFCFF;
+  --color-block-background: #202B36;
+  --color-badge: #FF7438;
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* Fixed typo: Removed duplicate h2 */
 h1, h2, h3, h4, h5, p {
   margin: 0;
   padding: 0;
-  font-weight: 700; /* This font-weight will apply to all of them, ensure it's desired */
+  font-weight: 700;
 }
 
 input,
 textarea,
-button,
 select,
 a {
   -webkit-tap-highlight-color: transparent;
+  /* REMOVED: outline: none; - See below for accessible focus styles */
+}
+
+/* NEW: Accessible focus styles for keyboard navigation */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #A333FF; /* Use your accent color */
+  outline-offset: 2px;
+  border-radius: 5px; /* Adjust to match button/element curvature */
 }
 
 a {
@@ -59,7 +68,7 @@ ul {
 
 button {
   border: none;
-  outline: none;
+  /* REMOVED: outline: none; - Handled by :focus-visible above */
   background-color: transparent;
 }
 
@@ -76,7 +85,39 @@ body {
   box-sizing: border-box;
   background-color: var(--color-body);
   color: var(--color-text-white);
-  overflow-x: hidden; /* Consider if truly needed, or if layout issues exist */
+  overflow-x: hidden;
+}
+
+/* Custom style for BeastSMM logo text */
+.logo-text {
+  font-size: 28px;
+  font-weight: 800;
+  background: var(--logo-gradient); /* Using the new variable */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+  display: inline-block;
+  padding: 10px 0;
+}
+
+/* Gradient text specific to BeastSMM content */
+.gradient-text {
+    background: linear-gradient(to right, #F804E8, #FF8C42);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent; /* FIXED: Used -webkit-text-fill-color */
+    color: transparent;
+    font-weight: 700;
+}
+
+/* Additional custom styles */
+.accent-link {
+    color: #A333FF;
+}
+.logo-link {
+  text-decoration: none;
 }
 
 h1 {
@@ -88,6 +129,18 @@ h2 {
   font-size: var(--font-size-h2);
   line-height: 113%;
 }
+/* Override for specific headings from BeastSMM's original styles */
+.benefits__info h2,
+.services__info h2,
+.promotion__info h2,
+.reviews__head h2 {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    display: inline-block;
+}
 
 h3 {
   width: fit-content;
@@ -97,16 +150,17 @@ h3 {
   text-transform: uppercase;
   background: var(--primary-gradient);
   -webkit-background-clip: text;
-  color: transparent; /* This should usually be -webkit-text-fill-color: transparent; if color is set on the element */
+  -webkit-text-fill-color: transparent; /* FIXED: Used -webkit-text-fill-color */
+  color: transparent;
 }
 
 .container-fluid {
-  overflow-x: hidden; /* Consider if truly needed, or if layout issues exist */
+  overflow-x: hidden;
 }
 
 .header {
   position: relative;
-  background-image: url(https://raw.githubusercontent.com/blinover/HLImages/refs/heads/main/APanel/Background.webp);
+  background-image: url(/assets/img/Background.webp); /* CHANGED: Image path for production */
   background-position: top;
   background-size: contain;
   background-repeat: no-repeat;
@@ -136,17 +190,15 @@ h3 {
   display: none;
 }
 
-/* Changed _visible to .active for consistency with JS */
 .mobile-menu__dropdown {
   display: none;
-  /* Keep existing styling for positioning, background, etc. */
   max-width: 219px;
   min-width: 219px;
   width: 100%;
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  flex-direction: column; /* Changed from default block */
+  flex-direction: column;
   gap: 16px;
   padding: 20px;
   background-color: rgba(14, 19, 23, .9);
@@ -154,15 +206,11 @@ h3 {
   text-align: center;
   border: 1px solid rgb(255, 255, 255, 0.1);
 }
-
-.mobile-menu__dropdown.active { /* This class is now used by JS */
-  display: flex; /* Changed from !important */
+.mobile-menu__dropdown.active {
+  display: flex;
 }
 
-
-.sign-btn {
-  /* ... existing styles ... */
-}
+/* .sign-btn styles (no change needed here) */
 
 .navigation__menu-list {
   display: flex;
@@ -241,7 +289,7 @@ h3 {
   width: max-content;
 }
 
-.badge_big .badge__icon { /* Typo here: should be .badge__big */
+.badge__big .badge__icon { /* FIXED: Typo from .badge_big to .badge__big */
   width: 42px;
   height: 42px;
 }
@@ -310,25 +358,26 @@ h3 {
 
 .btn-primary:hover {
   transform: scale(1.02);
-  box-shadow: 0 44px 15px rgba(255, 160, 27, 0.5) /* Typo: 44px? Should be 4px? */
+  box-shadow: 0 4px 15px rgba(255, 160, 27, 0.5); /* FIXED: Typo from 44px to 4px */
 }
 
 .btn-secondary {
   background: var(--secondary-gradient);
   /* The color here will be overridden by the -webkit-background-clip: text; */
-  color: var(--primary-gradient); 
+  color: var(--primary-gradient);
 }
 
 .btn-secondary:hover {
   transform: scale(1.02);
-  box-shadow: 0 4px 15px rgba(255, 0, 238, 0.3)
+  box-shadow: 0 4px 15px rgba(255, 0, 238, 0.3);
 }
 
 .btn-secondary::after {
   content: 'Services';
   background: var(--primary-gradient);
   -webkit-background-clip: text;
-  color: transparent; /* This typically means -webkit-text-fill-color: transparent; */
+  -webkit-text-fill-color: transparent; /* FIXED: Used -webkit-text-fill-color */
+  color: transparent;
 }
 
 .btn-disabled {
@@ -416,10 +465,11 @@ h3 {
 
 .slide__image {
   margin-bottom: 66px;
-  width: 504px; /* Hardcoded width, might be overridden by width: 100% */
-  height: 504px; /* Hardcoded height */
-  width: 100%; /* This will conflict with 504px, 100% will win */
-  object-fit: none; /* See notes above */
+  /* `width: 504px` and `height: 504px` are likely for a fixed aspect ratio or desktop. */
+  /* `width: 100%` will override the fixed width on smaller screens, which is fine. */
+  width: 100%;
+  height: 504px; /* Keeping the height fixed unless a responsive aspect ratio is desired */
+  object-fit: none;
 }
 
 .slide__description {
@@ -450,7 +500,7 @@ h3 {
 }
 
 .carousel__mobile-paginator-prev, .carousel__mobile-paginator-next {
-  display: none; /* Initially hidden, shown at 430px breakpoint */
+  display: none;
 }
 
 .carousel-paginator__item {
@@ -466,19 +516,18 @@ h3 {
   color: rgba(255, 255, 255, 0.6);
 }
 
-
 .carousel-paginator__item_active {
   color: rgba(255, 255, 255, 1);
 }
 
 .services {
-  position: relative;
-  left: -30px; /* This offset is problematic for responsiveness */
+  position: relative; /* Kept relative as badges depend on it */
+  /* REMOVED: left: -30px; - fixed offsets are problematic */
   display: flex;
   gap: 142px;
   max-width: 1488px;
   padding: 0 40px;
-  margin: 0 auto;
+  margin: 0 auto; /* Ensures it's centered */
   margin-bottom: 151px;
 }
 
@@ -504,14 +553,14 @@ h3 {
 }
 
 .promotion {
-  position: relative;
-  left: 23px; /* This offset is problematic for responsiveness */
+  position: relative; /* Kept relative as toasts depend on it */
+  /* REMOVED: left: 23px; - fixed offsets are problematic */
   display: flex;
   align-items: center;
   gap: 170px;
   max-width: 1507px;
   padding: 0 40px;
-  margin: 0 auto;
+  margin: 0 auto; /* Ensures it's centered */
   margin-bottom: 141px;
 }
 
@@ -533,18 +582,26 @@ h3 {
 .promotion__toasts {
   max-width: 617px;
   width: 100%;
-  height: 364px;
+  /* REMOVED: fixed height: 364px; - now dynamically sized by flex content */
   position: relative;
+
+  /* NEW: Flexbox for stable toast layout */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between toasts */
+  justify-content: center; /* Center toasts vertically */
+  align-items: center; /* Center toasts horizontally */
 }
 
 .promotion__toasts::after {
   z-index: -1;
   position: absolute;
   content: '';
-  top: 100px;
-  bottom: 100px;
-  left: 80px;
-  right: 80px;
+  top: 50%; /* FIXED: Centered */
+  left: 50%; /* FIXED: Centered */
+  transform: translate(-50%, -50%); /* FIXED: Centered */
+  width: 80%; /* Adjusted size */
+  height: 80%; /* Adjusted size */
   border-radius: 50% 22% 40% 80%;
   filter: blur(78px);
   background: linear-gradient(to bottom right, rgba(255, 0, 238, 0.5), rgba(255, 160, 27, 0.3));
@@ -557,32 +614,13 @@ h3 {
   gap: 19px;
   padding: 27px 47px 35px 27px;
   border-radius: 15px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 10%, rgba(14, 19, 23, 0.6) 100%)
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 10%, rgba(14, 19, 23, 0.6) 100%);
+  width: 100%; /* NEW: Ensure toasts take full width */
+  max-width: 380px; /* NEW: Optional max-width for toasts */
+  transform: none !important; /* NEW: Remove any lingering transforms for stability */
 }
 
-.toast-item-1 {
-  position: absolute;
-  z-index: 1;
-  transform: rotate(2deg);
-  top: 18px;
-  left: 10px;
-}
-
-.toast-item-2 {
-  position: absolute;
-  left: 10px;
-  top: 129px;
-  transform: rotate(4deg);
-  z-index: 2;
-}
-
-.toast-item-3 {
-  position: absolute;
-  left: 10px;
-  top: 242px;
-  transform: rotate(1deg);
-  z-index: 3;
-}
+/* REMOVED: Individual toast-item-1, toast-item-2, toast-item-3 classes as they are now handled by flexbox */
 
 .toasts__item-icon {
   width: 51px;
@@ -658,74 +696,105 @@ h3 {
   margin-left: auto;
 }
 
+/* FAQ Section Styles (from inline <style> block in original HTML) */
 .faq {
-  max-width: 1697px;
-  padding: 0 40px;
-  margin: 0 auto;
-  margin-bottom: 141px;
+    padding: 60px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 141px; /* Restored original margin-bottom */
 }
 
 .faq__title {
-  text-align: center;
-  margin-bottom: 35px;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    display: inline-block;
+    /* REMOVED: Redundant gradient properties, now handled by .gradient-text class on HTML */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
 }
 
 .faq__items {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+    margin-top: 20px;
+    display: flex; /* Ensure it's flex for vertical stacking */
+    flex-direction: column;
+    gap: 15px;
 }
 
+/* Individual Panel (FAQ Item) Styles */
 .panel {
-  background-color: #13191E;
-  border-radius: 15px;
-  /* padding-bottom: 17px; Removed, let panel__content handle padding */
+    background-color: #2a2a2a;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .panel__btn {
-  padding: 25px 25px 0 25px; /* Adjust padding if needed after removing panel padding */
-  width: 100%;
-  cursor: pointer;
-  color: var(--color-text-white);
-  background-color: #13191E;
-  text-align: left;
-  font-size: var(--font-size--footnote);
-  font-weight: var(--font-semi-bold);
-  line-height: 175%;
-  border-radius: 15px;
-  border: none;
-  outline: none;
-  /* Added for consistency with JS which expects flex for icon alignment */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    background-color: transparent;
+    color: #fff;
+    padding: 18px 25px; /* Adjusted padding from original for better visual balance */
+    width: 100%;
+    text-align: left;
+    border: none;
+    /* REMOVED: outline: none; - Handled by :focus-visible above */
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
 }
 
-.panel__btn:active {
-  background-color: transparent ; /* Changed from none to transparent */
+.panel__btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .panel__btn::after {
-  content: '\02795'; /* Unicode character for "plus" sign (+) */
-  font-size: 13px; /* Smaller font size for icon */
-  color: var(--color-text-white);
-  margin-left: 5px; /* Added margin for spacing */
-  transition: transform 0.3s ease; /* Added transition for icon rotation */
+    content: '+';
+    font-size: 24px;
+    font-weight: 300;
+    transition: transform 0.3s ease;
+    margin-left: 15px;
+    color: #A333FF;
 }
 
-/* Changed .panel__btn_active to .panel__btn.active for consistency with JS */
 .panel__btn.active::after {
-  content: '\02796'; /* Unicode character for "minus" sign (-) */
-  /* transform: rotate(45deg); // You could add a rotation if desired for the X */
+    content: '−';
+    transform: rotate(0deg);
+    color: #F804E8;
 }
 
 .panel__content {
-  padding: 8px 25px 0 25px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out, padding 0.2s ease-out; /* Added padding to transition */
-  color: rgba(255, 255, 255, 0.65);
+    padding: 0 25px;
+    background-color: #202020;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+    color: #bbb;
+    font-size: 16px;
+    line-height: 1.6;
 }
+
+.panel__content div {
+    padding-bottom: 20px;
+    padding-top: 5px;
+}
+
+.panel.active .panel__content {
+    max-height: 500px;
+    padding-top: 15px;
+    padding-bottom: 20px;
+}
+/* End FAQ Section Styles */
 
 .placeholder {
   max-width: 1697px;
@@ -737,7 +806,7 @@ h3 {
 .placeholder__wrapper {
   padding: 119px 308px 220px 74px;
   border-radius: 45px;
-  background: url('https://raw.githubusercontent.com/blinover/HLImages/refs/heads/main/APanel/footer_background.webp');
+  background: url('/assets/img/footer_background.webp'); /* CHANGED: Image path for production */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -748,7 +817,6 @@ h3 {
   font-size: var(--font-size-sub-heading-1);
   font-weight: var(--font-bold);
   line-height: 139%;
-
 }
 
 .action-call {
@@ -794,8 +862,14 @@ h3 {
   font-size: var(--font-size--footnote);
   font-weight: var(--font-semi-bold);
   line-height: 159%;
-  color: rgb(255, 255, 255, 0.16); /* Original low contrast. Use #FFFFFF for better contrast if desired as per earlier suggestion. */
+  color: #FFFFFF; /* CHANGED: For better contrast as previously recommended */
   transform: translateX(-50px);
+}
+
+/* Unified style for service badges (Removed inline styles) */
+.services__badges a {
+    text-decoration: none;
+    color: inherit;
 }
 
 @media (max-width: 1440px) {
@@ -819,14 +893,12 @@ h3 {
     height: 329px;
   }
 
-  /* Removed fixed left offset */
   .services {
     left: initial;
     gap: 80px;
     margin-bottom: 80px;
   }
 
-  /* Removed fixed left offset */
   .promotion {
     left: initial;
     gap: 80px;
@@ -869,13 +941,7 @@ h3 {
     display: none;
   }
 
-  /* These two rules are now UNNECESSARY IF JS and CSS are consistent with `.active` */
-  /* .mobile-menu__dropdown {
-    display: none !important;
-  }
-  .mobile-menu__dropdown_visible {
-    display: flex !important;
-  } */
+  /* REMOVED: Redundant rules for mobile-menu__dropdown_visible */
 
   .sign-btn {
     display: none;
@@ -883,24 +949,6 @@ h3 {
 
   .mobile-menu {
     position: relative;
-  }
-
-  /* This is now the primary styling for the dropdown, display is toggled by JS on .active */
-  /* Removed display: flex from here */
-  .mobile-menu__dropdown {
-    max-width: 219px;
-    min-width: 219px;
-    width: 100%;
-    position: absolute;
-    top: calc(100% + 6px);
-    right: 0;
-    flex-direction: column; /* Kept flex-direction here */
-    gap: 16px;
-    padding: 20px;
-    background-color: rgba(14, 19, 23, .9);
-    border-radius: 16px;
-    text-align: center;
-    border: 1px solid rgb(255, 255, 255, 0.1);
   }
 
   .mobile-menu__toggle {
@@ -1002,30 +1050,22 @@ h3 {
     max-width: 100%;
   }
 
+  /* REMOVED: Absolute positioning rules for toasts in this breakpoint, now handled by flexbox */
+  /* .promotion__toasts > * {
+    left: 50%;
+    width: 70%;
+  }
+  .toast-item-1 { transform: translateX(-50%) rotate(2deg); }
+  .toast-item-2 { transform: translateX(-50%) rotate(4deg); }
+  .toast-item-3 { transform: translateX(-50%) rotate(1deg); } */
+
   .promotion__caption, .services__caption, .reviews__caption {
     margin-top: 15px;
     font-size: var(--font-size-sub-heading-1);
   }
 
-  .promotion__toasts > * {
-    left: 50%;
-    width: 70%;
-  }
-
   .toasts__item-price {
     margin-left: auto;
-  }
-
-  .toast-item-1 {
-    transform: translateX(-50%) rotate(2deg);
-  }
-
-  .toast-item-2 {
-    transform: translateX(-50%) rotate(4deg);
-  }
-
-  .toast-item-3 {
-    transform: translateX(-50%) rotate(1deg);
   }
 
   .reviews {
@@ -1069,6 +1109,28 @@ h3 {
   .panel__content {
     font-size: 16px;
     line-height: 164%;
+  }
+
+  /* Responsive adjustments for FAQ (from inline <style> block in original HTML) */
+  @media (max-width: 768px) {
+      .faq {
+          padding: 40px 15px;
+      }
+      .faq__title {
+          font-size: 26px;
+          margin-bottom: 30px;
+      }
+      .panel__btn {
+          font-size: 16px;
+          padding: 15px 20px;
+      }
+      .panel__btn::after {
+          font-size: 20px;
+      }
+      .panel__content {
+          font-size: 15px;
+          padding: 0 20px;
+      }
   }
 
   .placeholder__wrapper {
@@ -1183,9 +1245,11 @@ h3 {
     font-size: 26px;
   }
 
-  /* This is likely redundant as .carousel__paginator is display: none; */
   .carousel__page-indicator {
-    display: none;
+    /* REMOVED: display: none; - As this was redundant with the display: flex rule below */
+    display: flex; /* Made visible again for small screens */
+    gap: 8px;
+    justify-content: center;
   }
 
   .carousel-paginator {
@@ -1203,9 +1267,9 @@ h3 {
     flex-direction: column;
   }
 
-  /* Remove absolute positioning for toasts on small screens */
-  .promotion__toasts > * {
-    position: relative; /* Change from absolute to relative */
+  /* REMOVED: Absolute positioning for toasts on small screens, now handled by flexbox */
+  /* .promotion__toasts > * {
+    position: relative;
     transform: none;
     left: 0;
     right: 0;
@@ -1214,7 +1278,7 @@ h3 {
     padding: 12px 20px;
     flex: 1;
     width: 100%;
-  }
+  } */
 
   .toasts__item-icon {
     width: 30px;
@@ -1265,13 +1329,6 @@ h3 {
 
   .promotion, .reviews, .faq, .services {
     margin-bottom: 40px;
-  }
-
-  /* Mobile page indicator (now made visible again) */
-  .carousel__page-indicator {
-    display: flex; /* Made visible again for small screens */
-    gap: 8px;
-    justify-content: center;
   }
 
   .carousel__page-indicator > * {
